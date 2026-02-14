@@ -1,0 +1,1748 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Would you be my Valentine Melatii? 💕</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --val-pink: #ff6b9d;
+        --val-pink-light: #ffb3c6;
+        --val-pink-dark: #c44569;
+        --val-black: #1a0a0f;
+        --val-black-soft: #2d1520;
+        --val-white: #fff5f8;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Quicksand", sans-serif;
+        background: var(--val-black);
+        color: var(--val-white);
+        overflow-x: hidden;
+        min-height: 100vh;
+        position: relative;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background: radial-gradient(ellipse at 50% 0%, rgba(255, 107, 157, 0.15) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(196, 69, 105, 0.1) 0%, transparent 40%);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      /* ================= SCROLLBAR (theme blend) ================= */
+      html {
+        scroll-behavior: smooth;
+        scrollbar-width: thin;
+        scrollbar-color: var(--val-pink-dark) var(--val-black-soft);
+      }
+
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: var(--val-black-soft);
+        border-left: 1px solid rgba(255, 107, 157, 0.1);
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, var(--val-pink-dark) 0%, var(--val-pink) 100%);
+        border-radius: 999px;
+        border: 2px solid var(--val-black-soft);
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--val-pink);
+      }
+
+      /* ================= VALENTINE QUESTION CARD ================= */
+      .valentine-overlay {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 100;
+        background: rgba(26, 10, 15, 0.85);
+        opacity: 1;
+        transition: opacity 0.5s ease;
+      }
+
+      .valentine-overlay.hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .valentine-card {
+        background: linear-gradient(145deg, var(--val-black-soft) 0%, var(--val-black) 100%);
+        border: 3px solid var(--val-pink);
+        border-radius: 24px;
+        padding: 48px 40px;
+        text-align: center;
+        max-width: 420px;
+        box-shadow:
+          0 0 60px rgba(255, 107, 157, 0.25),
+          inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      }
+
+      .valentine-card h1 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--val-pink-light);
+        margin: 0 0 32px 0;
+        line-height: 1.4;
+      }
+
+      .valentine-card h1 span {
+        color: var(--val-pink);
+      }
+
+      .options {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        min-height: 52px;
+      }
+
+      .btn-option {
+        font-family: "Quicksand", sans-serif;
+        font-size: 1rem;
+        font-weight: 600;
+        padding: 14px 28px;
+        border: none;
+        border-radius: 999px;
+        cursor: pointer;
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease;
+        position: relative;
+      }
+
+      .btn-yes {
+        background: linear-gradient(135deg, var(--val-pink) 0%, var(--val-pink-dark) 100%);
+        color: white;
+        box-shadow: 0 4px 20px rgba(255, 107, 157, 0.4);
+      }
+
+      .btn-yes:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 28px rgba(255, 107, 157, 0.5);
+      }
+
+      .btn-no {
+        background: var(--val-black-soft);
+        color: var(--val-pink-light);
+        border: 2px solid var(--val-pink-dark);
+      }
+
+      .btn-no:hover {
+        background: rgba(196, 69, 105, 0.2);
+      }
+
+      .btn-no.runaway {
+        transition:
+          left 0.3s ease,
+          top 0.3s ease;
+        position: absolute;
+      }
+
+      /* ================= SUCCESS STATE ================= */
+      .success-message {
+        display: none;
+        text-align: center;
+        padding: 24px;
+        z-index: 50;
+        position: relative;
+      }
+
+      .success-message.visible {
+        display: block;
+        animation: fadeIn 0.6s ease forwards;
+      }
+
+      .success-message h2 {
+        font-size: 1.5rem;
+        color: var(--val-pink);
+        margin-bottom: 8px;
+      }
+
+      .success-message p {
+        color: var(--val-pink-light);
+        font-size: 1rem;
+      }
+
+      /* ================= STEP INDICATOR ================= */
+      .step-indicator {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 200;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .step-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: var(--val-black-soft);
+        border: 2px solid var(--val-pink-dark);
+        transition: all 0.3s ease;
+      }
+
+      .step-dot.active {
+        background: var(--val-pink);
+        border-color: var(--val-pink);
+        box-shadow: 0 0 12px rgba(255, 107, 157, 0.5);
+      }
+
+      .step-dot.completed {
+        background: var(--val-pink-dark);
+        border-color: var(--val-pink);
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      /* ================= MUSIC CLOUD (center highlight in song section) ================= */
+      .cloud-music {
+        position: relative;
+        background: var(--val-black-soft);
+        border: 3px solid var(--val-pink);
+        border-radius: 16px;
+        padding: 16px 20px;
+        box-shadow:
+          0 8px 32px rgba(0, 0, 0, 0.4),
+          0 0 40px rgba(255, 107, 157, 0.25),
+          0 0 0 1px rgba(255, 107, 157, 0.3);
+        z-index: 15;
+        opacity: 0;
+        transition: opacity 0.6s ease 0.3s;
+        pointer-events: none;
+      }
+
+      .cloud-music.visible {
+        pointer-events: auto;
+        opacity: 1;
+      }
+
+      .our-story-section {
+        display: none;
+        text-align: center;
+        margin: 48px 0 40px 0;
+        opacity: 0;
+        transition: opacity 0.6s ease;
+      }
+
+      .our-story-section.visible {
+        display: block;
+        opacity: 1;
+      }
+
+      .our-story-heading {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--val-pink-light);
+        margin: 0 0 24px 0;
+        line-height: 1.4;
+      }
+
+      .main {
+        background-color: var(--val-black);
+        padding: 12px 16px;
+        border: 2px solid var(--val-pink-dark);
+        border-radius: 12px;
+        width: 300px;
+      }
+
+      .currentplaying {
+        display: flex;
+        margin-bottom: 10px;
+        align-items: center;
+      }
+
+      .spotify {
+        width: 32px;
+        height: 32px;
+        margin-right: 10px;
+        flex-shrink: 0;
+      }
+
+      .spotify circle {
+        fill: var(--val-pink);
+      }
+
+      .heading {
+        color: var(--val-pink-light);
+        font-size: 0.7rem;
+        font-weight: 600;
+        align-self: center;
+      }
+
+      .loader {
+        display: flex;
+        flex-direction: row;
+        min-height: 48px;
+        padding: 8px 10px;
+        justify-content: space-between;
+        border-radius: 8px;
+        align-items: center;
+        border: 2px solid var(--val-pink-dark);
+        background: rgba(26, 10, 15, 0.8);
+      }
+
+      .loader:hover {
+        background: rgba(255, 107, 157, 0.1);
+        cursor: pointer;
+      }
+
+      .song {
+        color: var(--val-pink-light);
+        font-size: 0.75rem;
+      }
+
+      .song .name {
+        margin-bottom: 4px;
+      }
+
+      .artist {
+        font-size: 0.65rem;
+        color: var(--val-pink);
+        opacity: 0.9;
+      }
+
+      .albumcover {
+        height: 32px;
+        width: 32px;
+        background: var(--val-black)
+          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff6b9d'%3E%3Cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E")
+          center / 60% no-repeat;
+        border: 2px solid var(--val-pink);
+        border-radius: 8px;
+        margin-right: 10px;
+        flex-shrink: 0;
+      }
+
+      .loading {
+        display: flex;
+        align-items: flex-end;
+        height: 24px;
+        gap: 4px;
+      }
+
+      .load {
+        width: 4px;
+        height: 8px;
+        margin: 0;
+        background: var(--val-pink);
+        border-radius: 2px;
+        animation: moveBar 0.6s ease-in-out infinite;
+      }
+
+      .load:nth-child(2) {
+        animation-delay: 0.1s;
+      }
+      .load:nth-child(3) {
+        animation-delay: 0.2s;
+      }
+      .load:nth-child(4) {
+        animation-delay: 0.3s;
+      }
+
+      @keyframes moveBar {
+        0%,
+        100% {
+          height: 8px;
+        }
+        50% {
+          height: 20px;
+        }
+      }
+
+      /* ================= SONG QUESTION SECTION ================= */
+      .song-question-section {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 50;
+        padding: 40px 20px;
+        overflow-y: auto;
+        opacity: 0;
+        transition: opacity 0.6s ease;
+        background: rgba(26, 10, 15, 0.95);
+        backdrop-filter: blur(4px);
+      }
+
+      .song-question-section.visible {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        opacity: 1;
+      }
+
+      @media (max-width: 768px) {
+        .song-question-section {
+          padding: 20px 16px;
+        }
+
+        .song-question-card {
+          padding: 32px 24px;
+          margin-top: 56px;
+          margin-bottom: 56px;
+        }
+
+        .step-indicator {
+          top: 16px;
+          right: 16px;
+        }
+
+        .floating-cards-container.visible {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .floating-cards-container .floating-card:nth-child(1),
+        .floating-cards-container .floating-card:nth-child(2) {
+          grid-column: span 1;
+        }
+        .floating-cards-container .floating-card:nth-child(3),
+        .floating-cards-container .floating-card:nth-child(4) {
+          grid-column: span 1;
+        }
+        .floating-cards-container .floating-card:nth-child(5),
+        .floating-cards-container .floating-card:nth-child(6) {
+          grid-column: span 1;
+        }
+        .floating-cards-container .floating-card:nth-child(7),
+        .floating-cards-container .floating-card:nth-child(8) {
+          grid-column: span 1;
+        }
+
+        .main {
+          width: 100%;
+          max-width: 300px;
+        }
+
+        .know-her-visual {
+          grid-template-columns: 1fr;
+        }
+
+        .know-her-list {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .song-question-card {
+        background: linear-gradient(145deg, var(--val-black-soft) 0%, var(--val-black) 100%);
+        border: 3px solid var(--val-pink);
+        border-radius: 24px;
+        padding: 40px 36px;
+        text-align: center;
+        max-width: 500px;
+        width: 100%;
+        box-shadow:
+          0 0 60px rgba(255, 107, 157, 0.25),
+          inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        margin-bottom: 72px;
+        margin-top: 80px;
+      }
+
+      .song-question-card h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--val-pink-light);
+        margin: 0 0 28px 0;
+        line-height: 1.4;
+      }
+
+      .song-question-card .step-info {
+        font-size: 0.85rem;
+        color: var(--val-pink);
+        margin-bottom: 20px;
+        font-weight: 600;
+        opacity: 0.8;
+      }
+
+      /* ================= KNOW HER SECTION (STEP 3) ================= */
+      .know-her-section {
+        display: none;
+        width: 100%;
+        max-width: 560px;
+        margin: 0 auto 80px;
+        padding-top: 24px;
+        opacity: 0;
+        transition: opacity 0.6s ease;
+      }
+
+      .know-her-section.visible {
+        display: block;
+        opacity: 1;
+      }
+
+      .know-her-card h2 span {
+        color: var(--val-pink);
+      }
+
+      .know-her-intro {
+        color: var(--val-pink-light);
+        font-size: 0.95rem;
+        margin: 0 0 24px 0;
+        opacity: 0.95;
+      }
+
+      /* Visual stats / mini infographic */
+      .know-her-visual {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+
+      .know-her-stat-card {
+        background: linear-gradient(145deg, rgba(255, 107, 157, 0.06) 0%, rgba(196, 69, 105, 0.04) 100%);
+        border: 2px solid rgba(255, 107, 157, 0.25);
+        border-radius: 16px;
+        padding: 16px;
+        text-align: center;
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+
+      .know-her-stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(255, 107, 157, 0.15);
+      }
+
+      .know-her-stat-card .stat-icon {
+        font-size: 1.75rem;
+        margin-bottom: 8px;
+        filter: drop-shadow(0 0 8px rgba(255, 107, 157, 0.4));
+      }
+
+      .know-her-stat-card .stat-title {
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: var(--val-pink);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 4px;
+      }
+
+      .know-her-stat-card .stat-value {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--val-pink-light);
+      }
+
+      /* Bar chart for preferences */
+      .know-her-chart {
+        background: rgba(26, 10, 15, 0.6);
+        border: 2px solid rgba(255, 107, 157, 0.2);
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 24px;
+      }
+
+      .know-her-chart h4 {
+        font-size: 0.85rem;
+        color: var(--val-pink);
+        margin: 0 0 16px 0;
+        text-align: center;
+        font-weight: 600;
+      }
+
+      .chart-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+
+      .chart-row:last-child {
+        margin-bottom: 0;
+      }
+
+      .chart-label {
+        font-size: 0.75rem;
+        color: var(--val-pink-light);
+        min-width: 70px;
+      }
+
+      .chart-bar-wrap {
+        flex: 1;
+        height: 20px;
+        background: var(--val-black-soft);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+
+      .chart-bar {
+        height: 100%;
+        background: linear-gradient(90deg, var(--val-pink) 0%, var(--val-pink-dark) 100%);
+        border-radius: 10px;
+        transition: width 0.8s ease;
+      }
+
+      /* Compact list with icons */
+      .know-her-list {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 24px 0;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        text-align: left;
+      }
+
+      .know-her-list li {
+        color: var(--val-pink-light);
+        font-size: 0.8rem;
+        padding: 10px 12px;
+        background: rgba(255, 107, 157, 0.06);
+        border: 1px solid rgba(255, 107, 157, 0.15);
+        border-radius: 10px;
+        line-height: 1.35;
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+      }
+
+      .know-her-list li .li-icon {
+        flex-shrink: 0;
+        font-size: 0.9rem;
+      }
+
+      .btn-next-step {
+        margin-top: 8px;
+      }
+
+      /* Back button - scroll to prev step */
+      .btn-back-step {
+        font-family: "Quicksand", sans-serif;
+        font-size: 0.9rem;
+        font-weight: 600;
+        padding: 10px 20px;
+        border: 2px solid var(--val-pink-dark);
+        border-radius: 999px;
+        background: transparent;
+        color: var(--val-pink-light);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin-right: 12px;
+      }
+
+      .btn-back-step:hover {
+        background: rgba(255, 107, 157, 0.15);
+        border-color: var(--val-pink);
+      }
+
+      .nav-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 16px;
+      }
+
+      .song-options {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .btn-song-option {
+        font-family: "Quicksand", sans-serif;
+        font-size: 1rem;
+        font-weight: 600;
+        padding: 14px 24px;
+        border: 2px solid var(--val-pink-dark);
+        border-radius: 12px;
+        background: var(--val-black-soft);
+        color: var(--val-pink-light);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: left;
+      }
+
+      .btn-song-option:hover {
+        background: rgba(255, 107, 157, 0.15);
+        border-color: var(--val-pink);
+        transform: translateX(4px);
+      }
+
+      .btn-song-option.correct {
+        background: linear-gradient(135deg, var(--val-pink) 0%, var(--val-pink-dark) 100%);
+        color: white;
+        border-color: var(--val-pink);
+        box-shadow: 0 4px 20px rgba(255, 107, 157, 0.4);
+        animation: pulse 0.6s ease;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+      }
+
+      .song-title {
+        display: none;
+        text-align: center;
+        margin: 64px 0 48px 0;
+        z-index: 10;
+        position: relative;
+        opacity: 0;
+        transition: opacity 0.6s ease;
+      }
+
+      .song-title.visible {
+        display: block;
+        opacity: 1;
+        animation: fadeIn 0.6s ease forwards;
+      }
+
+      .song-title h3 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--val-pink-light);
+        margin: 0;
+        line-height: 1.4;
+        text-shadow: 0 0 20px rgba(255, 107, 157, 0.3);
+      }
+
+      .song-title h3 span {
+        color: var(--val-pink);
+      }
+
+      /* ================= FLOATING MUSIC CARDS + CENTER CLOUD-MUSIC ================= */
+      .floating-cards-container {
+        display: none;
+        position: relative;
+        width: 100%;
+        max-width: 900px;
+        margin: 48px auto 80px;
+        min-height: 50vh;
+        overflow: visible;
+        opacity: 0;
+        transition: opacity 0.6s ease;
+      }
+
+      .floating-cards-container.visible {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: auto auto;
+        gap: 20px;
+        justify-items: center;
+        align-items: center;
+        opacity: 1;
+      }
+
+      /* Row 1: first 4 cards */
+      .floating-cards-container .floating-card:nth-child(1) {
+        grid-column: 1;
+        grid-row: 1;
+      }
+      .floating-cards-container .floating-card:nth-child(2) {
+        grid-column: 2;
+        grid-row: 1;
+      }
+      .floating-cards-container .floating-card:nth-child(3) {
+        grid-column: 3;
+        grid-row: 1;
+      }
+      .floating-cards-container .floating-card:nth-child(4) {
+        grid-column: 4;
+        grid-row: 1;
+      }
+      /* Row 2: last 4 cards */
+      .floating-cards-container .floating-card:nth-child(5) {
+        grid-column: 1;
+        grid-row: 2;
+      }
+      .floating-cards-container .floating-card:nth-child(6) {
+        grid-column: 2;
+        grid-row: 2;
+      }
+      .floating-cards-container .floating-card:nth-child(7) {
+        grid-column: 3;
+        grid-row: 2;
+      }
+      .floating-cards-container .floating-card:nth-child(8) {
+        grid-column: 4;
+        grid-row: 2;
+      }
+
+      .floating-card {
+        position: relative;
+        background: var(--val-black-soft);
+        border: 3px solid var(--val-pink-dark);
+        border-radius: 12px;
+        padding: 12px 16px;
+        box-shadow:
+          0 8px 32px rgba(0, 0, 0, 0.4),
+          0 0 0 1px rgba(255, 107, 157, 0.2);
+        cursor: pointer;
+        transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease,
+          opacity 0.6s ease;
+        animation: floatSway 8s ease-in-out infinite;
+        opacity: 0;
+      }
+
+      .floating-card.visible {
+        opacity: 1;
+      }
+
+      .floating-card:hover {
+        transform: scale(1.05);
+        box-shadow:
+          0 12px 40px rgba(255, 107, 157, 0.3),
+          0 0 0 1px rgba(255, 107, 157, 0.4);
+        z-index: 20;
+      }
+
+      .floating-card .card-content {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .floating-card .card-icon {
+        width: 24px;
+        height: 24px;
+        background: var(--val-black);
+        border: 2px solid var(--val-pink);
+        border-radius: 6px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .floating-card .card-icon::before {
+        content: "♪";
+        color: var(--val-pink);
+        font-size: 14px;
+      }
+
+      .floating-card .card-text {
+        color: var(--val-pink-light);
+        font-size: 0.85rem;
+        font-weight: 600;
+        line-height: 1.3;
+      }
+
+      .floating-card.size-small {
+        width: 140px;
+        padding: 10px 12px;
+      }
+
+      .floating-card.size-small .card-text {
+        font-size: 0.75rem;
+      }
+
+      .floating-card.size-medium {
+        width: 180px;
+        padding: 12px 16px;
+      }
+
+      .floating-card.size-large {
+        width: 220px;
+        padding: 14px 18px;
+      }
+
+      .floating-card.size-large .card-text {
+        font-size: 0.95rem;
+      }
+
+      @keyframes floatSway {
+        0%,
+        100% {
+          transform: translate(0, 0) rotate(0deg);
+        }
+        25% {
+          transform: translate(10px, -15px) rotate(1deg);
+        }
+        50% {
+          transform: translate(-8px, -25px) rotate(-1deg);
+        }
+        75% {
+          transform: translate(12px, -15px) rotate(0.5deg);
+        }
+      }
+
+      /* Different animation delays for variety */
+      .floating-card:nth-child(1) {
+        animation-delay: 0s;
+      }
+      .floating-card:nth-child(2) {
+        animation-delay: -1s;
+      }
+      .floating-card:nth-child(3) {
+        animation-delay: -2s;
+      }
+      .floating-card:nth-child(4) {
+        animation-delay: -3s;
+      }
+      .floating-card:nth-child(5) {
+        animation-delay: -4s;
+      }
+      .floating-card:nth-child(6) {
+        animation-delay: -5s;
+      }
+      .floating-card:nth-child(7) {
+        animation-delay: -6s;
+      }
+      .floating-card:nth-child(8) {
+        animation-delay: -7s;
+      }
+
+      /* ================= SPOTIFY WRAPPED SECTION ================= */
+      .wrapped-section {
+        display: none;
+        width: 100%;
+        max-width: 560px;
+        margin: 48px auto 80px;
+        padding: 24px 20px;
+        opacity: 0;
+        transition: opacity 0.8s ease;
+      }
+
+      .wrapped-section.visible {
+        display: block;
+        opacity: 1;
+      }
+
+      .wrapped-header {
+        text-align: center;
+        margin-bottom: 32px;
+      }
+
+      .wrapped-header h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #1db954 0%, #ff6b9d 50%, #c44569 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin: 0 0 8px 0;
+      }
+
+      .wrapped-header p {
+        font-size: 0.85rem;
+        color: var(--val-pink-light);
+        opacity: 0.9;
+        margin: 0;
+      }
+
+      /* Main wrapped card - same style as step 3 */
+      .wrapped-main-card {
+        position: relative;
+        background: linear-gradient(145deg, var(--val-black-soft) 0%, var(--val-black) 100%);
+        border: 3px solid var(--val-pink);
+        border-radius: 24px;
+        padding: 40px 36px;
+        text-align: center;
+        max-width: 560px;
+        margin: 0 auto;
+        box-shadow:
+          0 0 60px rgba(255, 107, 157, 0.25),
+          inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      }
+
+      .wrapped-main-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(29, 185, 84, 0.06) 0%, rgba(255, 107, 157, 0.1) 50%, rgba(196, 69, 105, 0.06) 100%);
+        pointer-events: none;
+        border-radius: 24px;
+      }
+
+      /* Visual stat cards - reuse know-her style */
+      .wrapped-visual {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        margin-bottom: 24px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .wrapped-stat-card {
+        background: linear-gradient(145deg, rgba(255, 107, 157, 0.06) 0%, rgba(196, 69, 105, 0.04) 100%);
+        border: 2px solid rgba(255, 107, 157, 0.25);
+        border-radius: 16px;
+        padding: 16px;
+        text-align: center;
+        opacity: 0;
+        transform: translateY(20px);
+        transition:
+          opacity 0.6s ease,
+          transform 0.6s ease,
+          box-shadow 0.2s ease;
+      }
+
+      .wrapped-stat-card.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .wrapped-stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(255, 107, 157, 0.15);
+      }
+
+      .wrapped-stat-card .stat-icon {
+        font-size: 1.75rem;
+        margin-bottom: 8px;
+      }
+      .wrapped-stat-card .stat-title {
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: var(--val-pink);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 4px;
+      }
+      .wrapped-stat-card .stat-value {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--val-pink-light);
+      }
+      .wrapped-stat-card.accent-green {
+        border-color: rgba(29, 185, 84, 0.5);
+      }
+      .wrapped-stat-card.accent-green .stat-value {
+        color: #1db954;
+      }
+      .wrapped-stat-card.accent-pink {
+        border-color: var(--val-pink);
+      }
+      .wrapped-stat-card.accent-pink .stat-value {
+        color: var(--val-pink);
+      }
+      .wrapped-stat-card.accent-purple {
+        border-color: rgba(167, 107, 255, 0.5);
+      }
+      .wrapped-stat-card.accent-purple .stat-value {
+        color: #a76bff;
+      }
+
+      /* Bar chart for wrapped */
+      .wrapped-chart {
+        background: rgba(26, 10, 15, 0.6);
+        border: 2px solid rgba(255, 107, 157, 0.2);
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 24px;
+        position: relative;
+        z-index: 1;
+        opacity: 0;
+        transform: translateY(20px);
+        transition:
+          opacity 0.6s ease,
+          transform 0.6s ease;
+      }
+
+      .wrapped-chart.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .wrapped-chart h4 {
+        font-size: 0.85rem;
+        color: var(--val-pink);
+        margin: 0 0 16px 0;
+        text-align: center;
+        font-weight: 600;
+      }
+
+      /* List for wrapped */
+      .wrapped-list {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 24px 0;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        text-align: left;
+        position: relative;
+        z-index: 1;
+        opacity: 0;
+        transform: translateY(20px);
+        transition:
+          opacity 0.6s ease,
+          transform 0.6s ease;
+      }
+
+      .wrapped-list.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .wrapped-list li {
+        color: var(--val-pink-light);
+        font-size: 0.8rem;
+        padding: 10px 12px;
+        background: rgba(255, 107, 157, 0.06);
+        border: 1px solid rgba(255, 107, 157, 0.15);
+        border-radius: 10px;
+        line-height: 1.35;
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+      }
+
+      .wrapped-list li .li-icon {
+        flex-shrink: 0;
+        font-size: 0.9rem;
+      }
+
+      .wrapped-cards {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .wrapped-card {
+        background: linear-gradient(145deg, var(--val-black-soft) 0%, var(--val-black) 100%);
+        border: 2px solid var(--val-pink-dark);
+        border-radius: 20px;
+        padding: 28px 24px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        opacity: 0;
+        transform: translateY(20px);
+        transition:
+          opacity 0.6s ease,
+          transform 0.6s ease,
+          box-shadow 0.3s ease;
+      }
+
+      .wrapped-card.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .wrapped-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(29, 185, 84, 0.08) 0%, rgba(255, 107, 157, 0.12) 50%, rgba(196, 69, 105, 0.08) 100%);
+        pointer-events: none;
+      }
+
+      .wrapped-card:hover {
+        box-shadow: 0 0 40px rgba(255, 107, 157, 0.2);
+      }
+
+      .wrapped-card .stat-label {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--val-pink);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+      }
+
+      .wrapped-card .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--val-pink-light);
+        line-height: 1.2;
+        margin-bottom: 4px;
+      }
+
+      .wrapped-card .stat-detail {
+        font-size: 0.9rem;
+        color: var(--val-pink);
+        opacity: 0.9;
+      }
+
+      .wrapped-card.accent-green {
+        border-color: rgba(29, 185, 84, 0.6);
+      }
+      .wrapped-card.accent-green .stat-value {
+        color: #1db954;
+      }
+      .wrapped-card.accent-pink {
+        border-color: var(--val-pink);
+      }
+      .wrapped-card.accent-pink .stat-value {
+        color: var(--val-pink);
+      }
+      .wrapped-card.accent-purple {
+        border-color: rgba(167, 107, 255, 0.6);
+      }
+      .wrapped-card.accent-purple .stat-value {
+        color: #a76bff;
+      }
+
+      .wrapped-footer {
+        text-align: center;
+        margin-top: 32px;
+        padding-top: 24px;
+        border-top: 1px solid rgba(255, 107, 157, 0.2);
+        position: relative;
+        z-index: 1;
+      }
+
+      .wrapped-footer p {
+        font-size: 0.95rem;
+        color: var(--val-pink-light);
+        margin: 0;
+      }
+
+      .wrapped-footer .heart {
+        display: inline-block;
+        animation: heartBeat 1.2s ease-in-out infinite;
+      }
+
+      @keyframes heartBeat {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.2);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .wrapped-visual {
+          grid-template-columns: 1fr;
+        }
+        .wrapped-list {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- STEP INDICATOR -->
+    <div class="step-indicator" id="stepIndicator">
+      <div class="step-dot active" data-step="1"></div>
+      <div class="step-dot" data-step="2"></div>
+      <div class="step-dot" data-step="3"></div>
+      <div class="step-dot" data-step="4"></div>
+    </div>
+
+    <!-- VALENTINE QUESTION -->
+    <div class="valentine-overlay" id="valentineOverlay">
+      <div class="valentine-card">
+        <h1>Would you be my <span>Valentine Melatikuu???</span> 💕</h1>
+        <div class="options" id="optionsContainer">
+          <button type="button" class="btn-option btn-yes" id="btnYes">Yes!</button>
+          <button type="button" class="btn-option btn-no" id="btnNo">No</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="success-message" id="successMessage">
+      <h2 style="margin-top: 300px">Yay! You said yes! 💕</h2>
+      <p>Thank you for being my Valentine!</p>
+    </div>
+
+    <!-- SONG QUESTION SECTION -->
+    <div class="song-question-section" id="songQuestionSection">
+      <div class="song-question-card" id="songQuestionCard">
+        <div class="step-info">Step 2 of 4</div>
+        <h2>The music that reminds me of you...</h2>
+        <p style="color: var(--val-pink-light); font-size: 0.9rem; margin-bottom: 24px; opacity: 0.9">Which one of these songs describe us?</p>
+        <div class="song-options">
+          <button type="button" class="btn-song-option" data-option="A">A. Lowkey - NIKI</button>
+          <button type="button" class="btn-song-option" data-option="B">B. Boyfriend - Ariana Grande</button>
+          <button type="button" class="btn-song-option" data-option="C">C. Semenjak Ada Dirimu - Yovie Widianto, Hivi!</button>
+          <button type="button" class="btn-song-option" data-option="D">D. ALL OF THEM (this is correct - just pick this 😌)</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: I know what she likes -->
+      <div class="know-her-section" id="knowHerSection">
+        <div class="song-question-card know-her-card">
+          <div class="step-info">Step 3 of 4</div>
+          <h2>I know what she likes…<br /><span>and I love to know more about her</span></h2>
+          <p class="know-her-intro">This is how I know her 💕</p>
+
+          <!-- Visual stat cards -->
+          <div class="know-her-visual">
+            <div class="know-her-stat-card">
+              <div class="stat-icon">🎂</div>
+              <div class="stat-title">Birthday</div>
+              <div class="stat-value">19 April</div>
+            </div>
+            <div class="know-her-stat-card">
+              <div class="stat-icon">☕</div>
+              <div class="stat-title">Top Drink</div>
+              <div class="stat-value">Caramel Macchiato</div>
+            </div>
+            <div class="know-her-stat-card">
+              <div class="stat-icon">🍵</div>
+              <div class="stat-title">Tea Fave</div>
+              <div class="stat-value">Peach Jasmine</div>
+            </div>
+            <div class="know-her-stat-card">
+              <div class="stat-icon">🍫</div>
+              <div class="stat-title">Ice Cream</div>
+              <div class="stat-value">Walls Cokelat</div>
+            </div>
+          </div>
+
+          <!-- Mini bar chart: preferences -->
+          <div class="know-her-chart">
+            <h4>Preferences Level</h4>
+            <div class="chart-row">
+              <span class="chart-label">Pedas 🌶️</span>
+              <div class="chart-bar-wrap"><div class="chart-bar" style="width: 90%"></div></div>
+            </div>
+            <div class="chart-row">
+              <span class="chart-label">Coffee</span>
+              <div class="chart-bar-wrap"><div class="chart-bar" style="width: 100%"></div></div>
+            </div>
+            <div class="chart-row">
+              <span class="chart-label">Sour</span>
+              <div class="chart-bar-wrap"><div class="chart-bar" style="width: 85%"></div></div>
+            </div>
+            <div class="chart-row">
+              <span class="chart-label">Ramyeon</span>
+              <div class="chart-bar-wrap"><div class="chart-bar" style="width: 95%"></div></div>
+            </div>
+          </div>
+
+          <ul class="know-her-list">
+            <li><span class="li-icon">🌶️</span> Suka pedas, cabe rawit biasanya dipisahkan</li>
+            <li><span class="li-icon">☕</span> Suka nongkrong di coffee shop</li>
+            <li><span class="li-icon">🍐</span> Buah favorit: pear, nanas, anggur</li>
+            <li><span class="li-icon">🍜</span> Suka Ramyeon</li>
+          </ul>
+
+          <div class="nav-buttons">
+            <button type="button" class="btn-back-step" id="btnBackToSong" data-scroll-to="songQuestionCard">← Back</button>
+            <button type="button" class="btn-option btn-yes btn-next-step" id="btnNextToSongs">Next →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4: This is our story (Currently Playing) -->
+      <div class="our-story-section" id="ourStorySection">
+        <h3 class="our-story-heading">This is our story</h3>
+        <div class="cloud-music" id="cloudMusic">
+          <div class="main">
+            <div class="currentplaying">
+              <svg viewBox="0 0 64 64" class="spotify"><circle cx="32" cy="32" r="30" fill="#ff6b9d" /></svg>
+              <div class="heading">Currently Playing</div>
+            </div>
+            <div class="loader">
+              <div style="display: flex; align-items: center">
+                <div class="albumcover"></div>
+                <div class="song">
+                  <div class="name">lowkey</div>
+                  <div class="artist">NIKI</div>
+                </div>
+              </div>
+              <div class="loading">
+                <div class="load"></div>
+                <div class="load"></div>
+                <div class="load"></div>
+                <div class="load"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="song-title">
+        <h3>Whenever I hear these songs…<br /><span>I always think of you</span></h3>
+      </div>
+
+      <div class="floating-cards-container" id="floatingCardsContainer">
+        <div class="floating-card size-medium">
+          <div class="card-content">
+            <div class="card-icon"></div>
+            <div class="card-text">OH GIRL - DPR LIVE</div>
+          </div>
+        </div>
+        <div class="floating-card size-large">
+          <div class="card-content">
+            <div class="card-icon"></div>
+            <div class="card-text">JASMINE - DPR LIVE</div>
+          </div>
+        </div>
+        <div class="floating-card size-large">
+          <div class="card-content">
+            <div class="card-icon"></div>
+            <div class="card-text">Kota ini tak sama tanpamu - Nadhif Basalamah</div>
+          </div>
+        </div>
+        <div class="floating-card size-medium">
+          <div class="card-content">
+            <div class="card-icon"></div>
+            <div class="card-text">Darling - leehi</div>
+          </div>
+        </div>
+        <div class="floating-card size-large">
+          <div class="card-content">
+            <div class="card-icon"></div>
+            <div class="card-text">boyfriend - Ariana grande</div>
+          </div>
+        </div>
+        <div class="floating-card size-small">
+          <div class="card-content">
+            <div class="card-icon"></div>
+            <div class="card-text">Last night on earth - green day</div>
+          </div>
+        </div>
+        <div class="floating-card size-medium">
+          <div class="card-content">
+            <div class="card-icon"></div>
+            <div class="card-text">Standing Next to You - Jung Kook</div>
+          </div>
+        </div>
+        <div class="floating-card size-large">
+          <div class="card-content">
+            <div class="card-icon"></div>
+            <div class="card-text">Remaja - Hivi!</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Spotify Wrapped style section (like Step 3 with visual stats + chart + list) -->
+      <div class="wrapped-section" id="wrappedSection">
+        <div class="wrapped-header">
+          <h2>Your Valentine Wrapped</h2>
+          <p>Here's our story in numbers & vibes</p>
+        </div>
+
+        <div class="wrapped-main-card">
+          <!-- Visual stat cards (like Step 3) -->
+          <div class="wrapped-visual">
+            <div class="wrapped-stat-card accent-green" data-wrapped-stat>
+              <div class="stat-icon">🎵</div>
+              <div class="stat-title">Top Song</div>
+              <div class="stat-value">JASMINE</div>
+            </div>
+            <div class="wrapped-stat-card accent-pink" data-wrapped-stat>
+              <div class="stat-icon">💕</div>
+              <div class="stat-title">Our Song</div>
+              <div class="stat-value">Lowkey</div>
+            </div>
+            <div class="wrapped-stat-card accent-purple" data-wrapped-stat>
+              <div class="stat-icon">📀</div>
+              <div class="stat-title">Total Songs</div>
+              <div class="stat-value">8</div>
+            </div>
+            <div class="wrapped-stat-card accent-pink" data-wrapped-stat>
+              <div class="stat-icon">♾️</div>
+              <div class="stat-title">Times I Thought</div>
+              <div class="stat-value">∞</div>
+            </div>
+          </div>
+
+          <!-- Bar chart: Music Vibes (like Step 3 Preferences Level) -->
+          <div class="wrapped-chart" data-wrapped-chart>
+            <h4>Music Vibes When I Think of You</h4>
+            <div class="chart-row">
+              <span class="chart-label">Romantic 💕</span>
+              <div class="chart-bar-wrap"><div class="chart-bar" style="width: 100%"></div></div>
+            </div>
+            <div class="chart-row">
+              <span class="chart-label">Chill 🍃</span>
+              <div class="chart-bar-wrap"><div class="chart-bar" style="width: 95%"></div></div>
+            </div>
+            <div class="chart-row">
+              <span class="chart-label">Upbeat ✨</span>
+              <div class="chart-bar-wrap"><div class="chart-bar" style="width: 80%"></div></div>
+            </div>
+            <div class="chart-row">
+              <span class="chart-label">Nostalgic 🌙</span>
+              <div class="chart-bar-wrap"><div class="chart-bar" style="width: 90%"></div></div>
+            </div>
+          </div>
+
+          <!-- List with icons (like Step 3) -->
+          <ul class="wrapped-list" data-wrapped-list>
+            <li><span class="li-icon">🎶</span> JASMINE - DPR LIVE (reminds me of you every time)</li>
+            <li><span class="li-icon">💫</span> Lowkey - NIKI (the one that started it all)</li>
+            <li><span class="li-icon">🏙️</span> Kota ini tak sama tanpamu - Nadhif Basalamah</li>
+            <li><span class="li-icon">🌹</span> Darling - LeeHi</li>
+            <li><span class="li-icon">💖</span> boyfriend - Ariana Grande</li>
+            <li><span class="li-icon">⭐</span> Standing Next to You - Jung Kook</li>
+            <li><span class="li-icon">🎸</span> Last night on earth - Green Day</li>
+            <li><span class="li-icon">🌸</span> Remaja - Hivi!</li>
+          </ul>
+
+          <!-- Highlight cards -->
+          <div class="wrapped-cards">
+            <div class="wrapped-card accent-green" data-wrapped-card>
+              <div class="stat-label">#1 Top Song</div>
+              <div class="stat-value">JASMINE</div>
+              <div class="stat-detail">DPR LIVE — reminds me of you every time</div>
+            </div>
+            <div class="wrapped-card accent-pink" data-wrapped-card>
+              <div class="stat-label">Songs That Remind Me of You</div>
+              <div class="stat-value">8</div>
+              <div class="stat-detail">and counting...</div>
+            </div>
+            <div class="wrapped-card accent-purple" data-wrapped-card>
+              <div class="stat-label">Times I Thought About You</div>
+              <div class="stat-value">∞</div>
+              <div class="stat-detail">too many to count</div>
+            </div>
+            <div class="wrapped-card accent-pink" data-wrapped-card>
+              <div class="stat-label">Our Song</div>
+              <div class="stat-value">Lowkey</div>
+              <div class="stat-detail">NIKI — the one that started it all</div>
+            </div>
+          </div>
+
+          <div class="wrapped-footer">
+            <p><span class="heart">💕</span> Thanks for being my Valentine <span class="heart">💕</span></p>
+            <p style="margin-top: 20px">
+              <a
+                href="card.html"
+                target="_blank"
+                style="
+                  display: inline-block;
+                  padding: 12px 24px;
+                  background: linear-gradient(135deg, var(--val-pink) 0%, var(--val-pink-dark) 100%);
+                  color: white;
+                  border-radius: 999px;
+                  text-decoration: none;
+                  font-weight: 600;
+                  font-size: 0.95rem;
+                  box-shadow: 0 4px 20px rgba(255, 107, 157, 0.4);
+                  transition: transform 0.2s ease;
+                "
+                >⬇ Simpan Kartunya!</a
+              >
+            </p>
+            <div class="nav-buttons" style="margin-top: 24px">
+              <button type="button" class="btn-back-step" id="btnBackToKnowHer" data-scroll-to="knowHerSection">← Lihat semua dari atas</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const overlay = document.getElementById("valentineOverlay");
+      const successMessage = document.getElementById("successMessage");
+      const cloudMusic = document.getElementById("cloudMusic");
+      const btnYes = document.getElementById("btnYes");
+      const btnNo = document.getElementById("btnNo");
+
+      function getRandomPosition(btn) {
+        const card = overlay.querySelector(".valentine-card");
+        const rect = card.getBoundingClientRect();
+        const btnRect = btn.getBoundingClientRect();
+        const padding = 20;
+        const maxX = rect.width - btnRect.width - padding * 2;
+        const maxY = rect.height - btnRect.height - padding * 2;
+        let x = Math.random() * maxX - maxX / 2;
+        let y = Math.random() * maxY - maxY / 2;
+        // Jauhkan dari posisi saat ini
+        if (Math.abs(x) < 60) x = x >= 0 ? 80 : -80;
+        if (Math.abs(y) < 40) y = y >= 0 ? 60 : -60;
+        return { x, y };
+      }
+
+      function runAway(btn) {
+        btn.classList.add("runaway");
+        const { x, y } = getRandomPosition(btn);
+        btn.style.left = x + "px";
+        btn.style.top = y + "px";
+        btn.style.right = "auto";
+        btn.style.bottom = "auto";
+      }
+
+      btnNo.addEventListener("mouseenter", function () {
+        runAway(btnNo);
+      });
+      btnNo.addEventListener("click", function (e) {
+        e.preventDefault();
+        runAway(btnNo);
+      });
+
+      // Step management
+      let currentStep = 1;
+      const totalSteps = 4;
+
+      function scrollToEl(el, delay) {
+        const ms = delay || 0;
+        setTimeout(function () {
+          if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, ms);
+      }
+
+      function updateStepIndicator(step) {
+        const dots = document.querySelectorAll(".step-dot");
+        dots.forEach((dot, index) => {
+          const stepNum = index + 1;
+          dot.classList.remove("active", "completed");
+          if (stepNum < step) {
+            dot.classList.add("completed");
+          } else if (stepNum === step) {
+            dot.classList.add("active");
+          }
+        });
+      }
+
+      function goToStep(step) {
+        currentStep = step;
+        updateStepIndicator(step);
+      }
+
+      // Initialize step indicator
+      updateStepIndicator(1);
+
+      btnYes.addEventListener("click", function () {
+        // Step 1 completed - move to step 2
+        overlay.classList.add("hidden");
+        successMessage.classList.add("visible");
+        goToStep(2);
+
+        // Show song question section and auto-scroll to it
+        setTimeout(function () {
+          const songQuestionSection = document.getElementById("songQuestionSection");
+          songQuestionSection.classList.add("visible");
+          scrollToEl(songQuestionSection, 100);
+        }, 1500);
+      });
+
+      // Song question interaction
+      const songOptions = document.querySelectorAll(".btn-song-option");
+      let songQuestionAnswered = false;
+
+      songOptions.forEach((btn) => {
+        btn.addEventListener("click", function () {
+          if (songQuestionAnswered) return; // Prevent multiple clicks
+
+          const selectedOption = this.dataset.option;
+          const correctOption = "D"; // Option D is the correct answer
+
+          // Remove correct class from all buttons
+          songOptions.forEach((b) => b.classList.remove("correct"));
+
+          // Check if answer is correct
+          if (selectedOption === correctOption) {
+            // Add correct class to clicked button
+            this.classList.add("correct");
+            songQuestionAnswered = true;
+
+            // Step 2 completed - move to step 3 (know her section)
+            goToStep(3);
+
+            setTimeout(() => {
+              const knowHerSection = document.getElementById("knowHerSection");
+              knowHerSection.classList.add("visible");
+              scrollToEl(knowHerSection, 300);
+            }, 500);
+          } else {
+            // Wrong answer - shake animation
+            this.style.animation = "shake 0.5s ease";
+            setTimeout(() => {
+              this.style.animation = "";
+            }, 500);
+          }
+        });
+      });
+
+      // Add shake animation for wrong answers
+      const style = document.createElement("style");
+      style.textContent = `
+        @keyframes shake {
+          0%, 100% { transform: translateX(0); }
+          25% { transform: translateX(-10px); }
+          75% { transform: translateX(10px); }
+        }
+      `;
+      document.head.appendChild(style);
+
+      // Back buttons — scroll to previous step WITHOUT hiding anything (she can see all from top to bottom)
+      document.getElementById("btnBackToSong").addEventListener("click", function () {
+        const target = document.getElementById("songQuestionCard");
+        if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+        goToStep(2);
+      });
+
+      document.getElementById("btnBackToKnowHer").addEventListener("click", function () {
+        const target = document.getElementById("knowHerSection");
+        if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+        goToStep(3);
+      });
+
+      // Step 4: Next (from know-her to songs) — keep know-her section visible so she can scroll back and see all steps
+      document.getElementById("btnNextToSongs").addEventListener("click", function () {
+        goToStep(4);
+
+        const ourStorySection = document.getElementById("ourStorySection");
+        const songTitle = document.querySelector(".song-title");
+        const floatingCardsContainer = document.getElementById("floatingCardsContainer");
+        const wrappedSection = document.getElementById("wrappedSection");
+        ourStorySection.classList.add("visible");
+        songTitle.classList.add("visible");
+        floatingCardsContainer.classList.add("visible");
+
+        const floatingCards = document.querySelectorAll(".floating-card");
+        floatingCards.forEach((card, index) => {
+          setTimeout(() => card.classList.add("visible"), index * 120);
+        });
+
+        setTimeout(() => cloudMusic.classList.add("visible"), 400);
+        scrollToEl(ourStorySection, 200);
+
+        // Show Spotify Wrapped section after a delay (when all steps are done)
+        setTimeout(() => {
+          wrappedSection.classList.add("visible");
+          // Animate stat cards (like step 3)
+          const wrappedStats = document.querySelectorAll("[data-wrapped-stat]");
+          wrappedStats.forEach((el, i) => setTimeout(() => el.classList.add("visible"), i * 120));
+          // Animate chart
+          const wrappedChart = document.querySelector("[data-wrapped-chart]");
+          if (wrappedChart) setTimeout(() => wrappedChart.classList.add("visible"), 600);
+          // Animate list
+          const wrappedList = document.querySelector("[data-wrapped-list]");
+          if (wrappedList) setTimeout(() => wrappedList.classList.add("visible"), 800);
+          // Animate highlight cards
+          const wrappedCards = document.querySelectorAll("[data-wrapped-card]");
+          wrappedCards.forEach((card, index) => {
+            setTimeout(() => card.classList.add("visible"), 1000 + index * 200);
+          });
+          scrollToEl(wrappedSection, 500);
+        }, 2500);
+      });
+    </script>
+  </body>
+</html>
